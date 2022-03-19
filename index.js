@@ -20,6 +20,34 @@ app.get('/', (req, res) => {
   res.json(products)
 })
 
+app.get('/resumes', (req, res) => {
+  let products = []
+
+  for (let index = 0; index < 25; index++) {
+    products.push({
+      id: index+1,
+      name: 'Petr' + index,
+      experience: 8,
+      level: index % 2 == 0 ? 'Senior' : 'Middle',
+      tags: index % 2 == 0 ? ['react', 'php', 'typescript'] : ['html', 'css', 'redux']
+    })
+  }
+
+  if(req.query.tags) {
+    let list = [];
+    req.query.tags.forEach(tag=> {
+      list = list.concat(products.filter(product => product.tags.indexOf(tag) > -1));
+    })
+    products=list;
+  }
+
+  if(req.query.level) {
+    products = products.filter(product => product.level == req.query.level)
+  }
+
+  res.json(products)
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
